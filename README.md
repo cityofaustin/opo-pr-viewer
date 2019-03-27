@@ -7,3 +7,16 @@ The problem this application solves:
 The purpose of the PR viewer is to be a layer on top of S3, it basically runs Nginx which has great routing capabilities, and we configure it as a proxy between react and s3:
 
 [Client / Browser] <-> [React] <-> [Nginx] <-> [S3]
+
+To run:
+
+```
+git clone https://github.com/cityofaustin/opo-pr-viewer
+
+cd opo-pr-viewer
+
+docker build --no-cache -f Dockerfile -t cityofaustin/opo-pr-viewer .
+
+docker run -it --rm -p 80:80/tcp cityofaustin/opo-pr-viewer
+```
+
