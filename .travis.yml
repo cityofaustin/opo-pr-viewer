@@ -23,7 +23,7 @@ addons:
       - jq
       - curl
 
-# We are going to install AWS Cli, Heroku Cli and source our helper scripts
+# We are going to install AWS Cli and source our helper scripts
 before_install:
     - sudo pip install awscli
     - source ./.travis/aws-helper.sh
@@ -45,10 +45,10 @@ jobs:
     - echo "Testing AWS has access to the buckets list"
     - aws s3api list-buckets --query "Buckets[].Name"
 
-  # We now build the web & worker images ...
-  - stage: Build Docker Containers & Restarting containers on success
-    script:
-    - build_dockless "latest"
-    # Once built we release
-    after_success:
-    - restart_all_tasks
+  # # We now build the web & worker images ...
+  # - stage: Build Docker Containers & Restarting containers on success
+  #   script:
+  #   - build_dockless "latest"
+  #   # Once built we release
+  #   after_success:
+  #   - restart_all_tasks
