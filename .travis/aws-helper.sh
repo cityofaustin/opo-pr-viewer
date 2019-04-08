@@ -4,7 +4,7 @@ set -o errexit
 echo "Logging in to AWS Docker Repository"
 $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
 
-function build_DOCKER {
+function build_docker {
 	# Build
   echo "Building ${DOCKER_FILE} with tag ${DOCKER_TAG}"
 	docker build --no-cache -f $DOCKER_FILE -t $DOCKER_TAG .
