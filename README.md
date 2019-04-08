@@ -27,5 +27,5 @@ http://localhost/police-thank-pr-31/
 
 You should also see PRs built in the cloud, like spanish versions:
 
-http://localhost/police-queja-pr-97/
+http://localhost/policia-queja-pr-97/
 http://localhost/policia-agradezca-pr-31/
