@@ -22,8 +22,10 @@ docker run -it --rm -p 80:80/tcp cityofaustin/opo-pr-viewer
 
 Once running, try this in your browser:
 
-http://localhost/officer-complaint-pr-85/
+http://localhost/police-complain-pr-97/
+http://localhost/police-thank-pr-31/
 
+You should also see PRs built in the cloud, like spanish versions:
 
-Notes: 
-In order for this to work, the file `/officer-complaint-pr-85/js/app.bundle.js` had to be patched, basically replacing the string `/police-complain` with `/officer-complaint-pr-85`. This can be done with the sed command (look at the form's deployment pipeline for reference).
+http://localhost/police-queja-pr-97/
+http://localhost/policia-agradezca-pr-31/
