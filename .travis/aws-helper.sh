@@ -4,34 +4,18 @@ set -o errexit
 echo "Logging in to AWS Docker Repository"
 $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
 
-function build_dockless {
-	DOCKLESS_IMAGE=$1
-	DOCKLESS_MODE=":latest"
-	DOCKLESS_FILE="Dockerfile"
-
-	# First, determine if we are building the base image.
-	if [ "${DOCKLESS_IMAGE}" = "base" ]; then
-		DOCKLESS_MODE=":base"
-		DOCKLESS_FILE="${DOCKLESS_FILE}.base"
-	fi;
-
-	# Then, generate the tag string to use in the AWS private registry
-	DOCKLESS_TAG="cityofaustin/opo-pr-viewer${DOCKLESS_MODE}"
-	echo "Final Image Name (tag): ${DOCKLESS_TAG}"
-
+function build_DOCKER {
 	# Build
-  echo "Building ${DOCKLESS_FILE} with tag ${DOCKLESS_TAG}"
-	docker build -f $DOCKLESS_FILE -t $DOCKLESS_TAG \
-				--build-arg DATABASE_URL=$DOCKLESS_DATABASE_URL \
-				.
+  echo "Building ${DOCKER_FILE} with tag ${DOCKER_TAG}"
+	docker build --no-cache -f $DOCKER_FILE -t $DOCKER_TAG .
 
 	# Tag
-  echo "Tagging ${DOCKLESS_TAG} with tag ${DOCKLESS_TAG}"
-	docker tag $DOCKLESS_TAG $DOCKLESS_REPO/$DOCKLESS_TAG
+  echo "Tagging ${DOCKER_TAG} with tag ${DOCKER_TAG}"
+	docker tag $DOCKER_TAG $DOCKER_REPO/$DOCKER_TAG
 
 	# Push
-  echo "Pushing: $DOCKLESS_REPO/$DOCKLESS_TAG"
-  docker push $DOCKLESS_REPO/$DOCKLESS_TAG
+  echo "Pushing: $DOCKER_REPO/$DOCKER_TAG"
+  docker push $DOCKER_REPO/$DOCKER_TAG
 
   echo "Done"
 }
@@ -42,12 +26,12 @@ function build_dockless {
 #
 function restart_all_tasks {
   echo "Updating ECS Cluster"
-  aws ecs update-service --force-new-deployment --cluster $DOCKLESS_CLUSTER --service $DOCKLESS_SERVICE
+  aws ecs update-service --force-new-deployment --cluster $DOCKER_CLUSTER --service $DOCKER_SERVICE
 
   echo "Stopping any old remaining containers (autoscaling should spawn new tasks)"
-  for DOCKLESS_TASK_ID in $(aws ecs list-tasks --cluster $DOCKLESS_CLUSTER | jq -r ".taskArns[] | split(\"/\") | .[1]");
+  for DOCKER_TASK_ID in $(aws ecs list-tasks --cluster $DOCKER_CLUSTER | jq -r ".taskArns[] | split(\"/\") | .[1]");
   do
-	echo "Stopping task id: ${DOCKLESS_TASK_ID}";
-	aws ecs stop-task --cluster $DOCKLESS_CLUSTER --task $DOCKLESS_TASK_ID;
+		echo "Stopping task id: ${DOCKER_TASK_ID}";
+		aws ecs stop-task --cluster $DOCKER_CLUSTER --task $DOCKER_TASK_ID;
   done
 }
