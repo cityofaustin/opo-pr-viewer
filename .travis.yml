@@ -9,7 +9,7 @@ dist: trusty
 #   Regular branches will not be built, they can be updated and commited at any time without disturbing PRs, master or staging.
 if: |
   (branch IN (master, production) AND type = push) OR (type = pull_request)
-  
+
 # We will need these services:
 services:
 - docker
